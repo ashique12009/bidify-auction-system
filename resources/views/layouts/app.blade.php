@@ -3,34 +3,70 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Bidify - Online Auction Platform') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link rel="icon" href="favicon1.ico" type="image/x-icon">
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body>
+        <!-- Header -->
+        <header class="header">
+          <div class="container header-content">
+            <a href="{{ route('welcome') }}" class="logo"><img src="{{ asset('assets/images/mlogo.jpg') }}" alt="Bidify Logo"></a>
+            <nav class="nav">
+              <a href="{{ route('welcome') }}" class="{{ request()->routeIs('welcome') ? 'active' : '' }}">Home</a>
+              <a href="{{ route('auctions.index') }}" class="{{ request()->routeIs('auctions.*') ? 'active' : '' }}">Auctions</a>
+              <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">Categories</a>
+              <a href="{{ route('how-it-works') }}" class="{{ request()->routeIs('how-it-works') ? 'active' : '' }}">How It Works</a>
+            </nav>
+            <div class="header-actions">
+              <form action="{{ route('search.results') }}" method="GET" class="search-form me-3">
+                <input type="text" name="q" placeholder="Search..." class="form-control" value="{{ request('q') }}">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+              </form>
+              @auth
+                <div class="dropdown me-3">
+                  <button class="btn btn-outline dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    {{ auth()->user()->name }}
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="dropdown-item">Logout</button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              @else
+                <a href="{{ route('login') }}" class="btn btn-outline me-2">Sign In</a>
+                <a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+              @endauth
+            </div>
+          </div>
+        </header>
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        <!-- Main Content -->
+        <main>
+            @yield('content')
+        </main>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
+        <!-- Footer -->
+        @include('layouts.footer')
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

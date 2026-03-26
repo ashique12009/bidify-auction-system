@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->latest()->paginate(10);
+        $products = Product::with(['category', 'publisher'])->latest()->paginate(10);
         return view('backend.products.index', compact('products'));
     }
 
@@ -44,6 +45,7 @@ class ProductController extends Controller
         ]);
 
         $data = $request->except('product_image');
+        $data['publisher_id'] = auth()->id();
 
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
@@ -63,7 +65,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load('category');
+        $product->load(['category', 'publisher']);
         return view('backend.products.show', compact('product'));
     }
 

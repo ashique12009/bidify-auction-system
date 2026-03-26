@@ -26,7 +26,10 @@
                         </div>
                         <div class="col-md-8">
                             <h4>{{ $product->product_name }}</h4>
-                            <p class="text-muted">Category: {{ $product->category->category_name }}</p>
+                            <p class="text-muted">
+                                Category: {{ $product->category->category_name }} | 
+                                Publisher: {{ $product->publisher->name }}
+                            </p>
                             
                             <div class="mb-3">
                                 <span class="badge bg-{{ $product->status == 'running' ? 'success' : ($product->status == 'ended' ? 'danger' : 'warning') }}">

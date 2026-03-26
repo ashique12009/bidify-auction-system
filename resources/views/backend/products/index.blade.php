@@ -21,6 +21,7 @@
                     <th>Image</th>
                     <th>Name</th>
                     <th>Category</th>
+                    <th>Publisher</th>
                     <th>Status</th>
                     <th>Start Price</th>
                     <th>Current Price</th>
@@ -40,6 +41,7 @@
                         </td>
                         <td>{{ $product->product_name }}</td>
                         <td>{{ $product->category->category_name }}</td>
+                        <td>{{ $product->publisher->name }}</td>
                         <td>
                             <span class="badge bg-{{ $product->status == 'running' ? 'success' : ($product->status == 'ended' ? 'danger' : 'warning') }}">
                                 {{ ucfirst($product->status) }}
@@ -61,7 +63,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">No products found.</td>
+                        <td colspan="9" class="text-center">No products found.</td>
                     </tr>
                 @endforelse
             </tbody>
