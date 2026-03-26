@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
@@ -17,32 +19,44 @@ class CategorySeeder extends Seeder
         $categories = [
             [
                 'category_name' => 'Watches',
-                'category_image' => 'watches.jpg'
+                'image_url' => 'https://picsum.photos/seed/watch/400'
             ],
             [
                 'category_name' => 'Art',
-                'category_image' => 'art.jpg'
+                'image_url' => 'https://picsum.photos/seed/art/400'
             ],
             [
                 'category_name' => 'Fashion',
-                'category_image' => 'fashion.jpg'
+                'image_url' => 'https://picsum.photos/seed/fashion/400'
             ],
             [
                 'category_name' => 'Home',
-                'category_image' => 'home.jpg'
+                'image_url' => 'https://picsum.photos/seed/home/400'
             ],
             [
                 'category_name' => 'Electronics',
-                'category_image' => 'electronics.jpg'
+                'image_url' => 'https://picsum.photos/seed/electronics/400'
             ],
             [
                 'category_name' => 'Jewelry',
-                'category_image' => 'jewelry.jpg'
+                'image_url' => 'https://picsum.photos/seed/jewelry/400'
             ]
         ];
 
-        foreach ($categories as $category) {
-            Category::create($category);
+        foreach ($categories as $item) {
+            $response = Http::timeout(10)->get($item['image_url']);
+
+            if ($response->successful() && str_contains($response->header('Content-Type'), 'image')) {
+
+                $fileName = 'categories/' . Str::random(10) . '.jpg';
+
+                Storage::disk('public')->put($fileName, $response->body());
+
+                Category::create([
+                    'category_name' => $item['category_name'],
+                    'category_image' => $fileName,
+                ]);
+            }
         }
     }
 }
