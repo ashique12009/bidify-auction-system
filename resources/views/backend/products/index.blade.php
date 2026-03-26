@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="dashboard-container">
+    <div class="dashboard-header">
         <h1>Products</h1>
         <a href="{{ route('products.create') }}" class="btn btn-primary">Create Product</a>
     </div>
@@ -34,7 +34,7 @@
                         <td>{{ $product->id }}</td>
                         <td>
                             @if($product->product_image)
-                                <img src="{{ asset('uploads/products/' . $product->product_image) }}" alt="{{ $product->product_name }}" style="width: 50px; height: 50px; object-fit: cover;">
+                                <img src="{{ asset('uploads/products/' . $product->product_image) }}" alt="{{ $product->product_name }}">
                             @else
                                 <span class="text-muted">No Image</span>
                             @endif

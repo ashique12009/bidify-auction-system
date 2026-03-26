@@ -14,10 +14,14 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 // Profile Routes
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Backend CRUD Routes
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
 });
 
 // Auction Routes
@@ -47,9 +51,5 @@ Route::get('/search', function () {
 Route::get('/how-it-works', function () {
     return view('pages.how-it-works');
 })->name('how-it-works');
-
-// Backend CRUD Routes
-Route::resource('categories', CategoryController::class);
-Route::resource('products', ProductController::class);
 
 require __DIR__.'/auth.php';
