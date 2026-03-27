@@ -23,10 +23,10 @@
           <div class="container header-content">
             <a href="{{ route('welcome') }}" class="logo"><img src="{{ asset('assets/images/mlogo.jpg') }}" alt="Bidify Logo"></a>
             <nav class="nav">
-              <a href="{{ route('welcome') }}">Home</a>
-              <a href="{{ route('auctions.index') }}">Auctions</a>
-              <a href="{{ route('frontend.categories.index') }}">Categories</a>
-              <a href="{{ route('how-it-works') }}">How It Works</a>
+              <a href="{{ route('welcome') }}" class="{{ request()->routeIs('welcome') ? 'active' : '' }}">Home</a>
+              <a href="{{ route('auctions.index') }}" class="{{ request()->routeIs('auctions.*') ? 'active' : '' }}">Auctions</a>
+              <a href="{{ route('frontend.categories.index') }}" class="{{ request()->routeIs('frontend.categories.*') ? 'active' : '' }}">Categories</a>
+              <a href="{{ route('how-it-works') }}" class="{{ request()->routeIs('how-it-works') ? 'active' : '' }}">How It Works</a>
             </nav>
             <div class="header-actions">
               @auth
