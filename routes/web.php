@@ -43,6 +43,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     });
 });
 
+// FRONTEND ROUTES
 // Auction Routes
 Route::get('/auctions', function () {
     $auctions = \App\Models\Product::with(['category', 'publisher'])
@@ -66,7 +67,7 @@ Route::get('/categories', function () {
         ->take(6)
         ->get();
     return view('frontend.categories.index', compact('categories', 'featuredCategories'));
-})->name('categories.index');
+})->name('frontend.categories.index');
 
 Route::get('/categories/{category}', function ($category) {
     $category = \App\Models\Category::withCount('products')->findOrFail($category);

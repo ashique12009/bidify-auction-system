@@ -21,7 +21,7 @@
         <nav class="nav">
           <a href="{{ route('welcome') }}">Home</a>
           <a href="{{ route('auctions.index') }}">Auctions</a>
-          <a href="{{ route('categories.index') }}">Categories</a>
+          <a href="{{ route('frontend.categories.index') }}">Categories</a>
           <a href="{{ route('how-it-works') }}">How It Works</a>
         </nav>
         <div class="header-actions">
