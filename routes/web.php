@@ -19,9 +19,28 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Backend CRUD Routes
-    Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
+    // Admin Routes - Full access to categories
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('categories', CategoryController::class);
+    });
+
+    // Publisher Routes - Can manage their own products only
+    Route::middleware('role:publisher')->prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/{product}', [ProductController::class, 'show'])->name('products.show');
+        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::patch('/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    });
+
+    // Admin Routes - Full access to all products
+    Route::middleware('role:admin')->prefix('admin/products')->group(function () {
+        Route::get('/', [ProductController::class, 'adminIndex'])->name('admin.products.index');
+        Route::get('/{product}', [ProductController::class, 'show'])->name('admin.products.show');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+    });
 });
 
 // Auction Routes

@@ -15,8 +15,27 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category', 'publisher'])->latest()->paginate(10);
+        // For publishers, show only their own products
+        if (auth()->user()->role === 'publisher') {
+            $products = Product::with(['category', 'publisher'])
+                ->where('publisher_id', auth()->id())
+                ->latest()
+                ->paginate(10);
+        } else {
+            // For admins, show all products
+            $products = Product::with(['category', 'publisher'])->latest()->paginate(10);
+        }
+        
         return view('backend.products.index', compact('products'));
+    }
+
+    /**
+     * Admin index - Show all products for admin
+     */
+    public function adminIndex()
+    {
+        $products = Product::with(['category', 'publisher'])->latest()->paginate(10);
+        return view('backend.products.admin-index', compact('products'));
     }
 
     /**
@@ -75,6 +94,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        // Check if user is publisher and owns this product, or if user is admin
+        if (auth()->user()->role === 'publisher' && $product->publisher_id !== auth()->id()) {
+            return redirect()->route('products.index')->with('error', 'You can only edit your own products.');
+        }
+        
         $categories = Category::all();
         return view('backend.products.edit', compact('product', 'categories'));
     }
@@ -84,6 +108,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // Check if user is publisher and owns this product, or if user is admin
+        if (auth()->user()->role === 'publisher' && $product->publisher_id !== auth()->id()) {
+            return redirect()->route('products.index')->with('error', 'You can only update your own products.');
+        }
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'product_name' => 'required|string|max:255',
@@ -121,6 +149,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        // Check if user is publisher and owns this product, or if user is admin
+        if (auth()->user()->role === 'publisher' && $product->publisher_id !== auth()->id()) {
+            return redirect()->route('products.index')->with('error', 'You can only delete your own products.');
+        }
+        
         // Delete image if exists
         if ($product->product_image && Storage::disk('public')->exists($product->product_image)) {
             Storage::disk('public')->delete($product->product_image);
