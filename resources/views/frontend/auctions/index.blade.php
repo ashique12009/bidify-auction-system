@@ -35,7 +35,7 @@
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <span class="text-muted small">Bids:</span>
-                                        <span class="fw-bold">{{ $auction->bids_count ?? 0 }}</span>
+                                        <span class="fw-bold">{{ $auction->bids->count() }}</span>
                                     </div>
                                 </div>
                                 

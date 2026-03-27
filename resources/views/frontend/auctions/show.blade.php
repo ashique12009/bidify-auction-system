@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Total Bids:</span>
-                                    <span>{{ $auction->bids_count ?? 0 }}</span>
+                                    <span class="fw-bold">{{ $auction->bids->count() }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Category:</span>
@@ -62,8 +62,19 @@
                         @if($auction->status === 'running')
                             <div class="mt-4">
                                 <h6>Place Your Bid</h6>
+                                @if(session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if(session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <form action="{{ route('bids.place') }}" method="POST" class="bid-form">
                                     @csrf
+                                    <input type="hidden" name="product_id" value="{{ $auction->id }}">
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
                                         <input type="number" name="bid_amount" class="form-control" 
@@ -105,17 +116,25 @@
                     <h6>Bid History</h6>
                 </div>
                 <div class="card-body">
-                    @forelse($auction->bids ?? [] as $bid)
+                    @forelse($auction->bids as $bid)
                         <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
                             <div>
                                 <strong>{{ $bid->user->name }}</strong>
                                 <br><small class="text-muted">{{ $bid->created_at->format('M d, h:i A') }}</small>
                             </div>
-                            <span class="fw-bold">${{ number_format($bid->bid_amount, 2) }}</span>
+                            <span class="fw-bold">{{ $bid->bid_amount }}</span>
                         </div>
                     @empty
                         <p class="text-muted text-center">No bids yet</p>
                     @endforelse
+                    
+                    @if($auction->bids->count() > 5)
+                        <div class="text-center mt-3">
+                            <button class="btn btn-sm btn-outline-primary" onclick="loadMoreBids()">
+                                Load More Bids
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
             

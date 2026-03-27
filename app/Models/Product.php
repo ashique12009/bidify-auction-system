@@ -38,4 +38,9 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'publisher_id');
     }
+
+    public function bids()
+    {
+        return $this->hasMany(Bid::class)->orderBy('created_at', 'desc');
+    }
 }

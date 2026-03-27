@@ -49,6 +49,12 @@ Route::get('/auctions', [WelcomeController::class, 'auctions'])->name('auctions.
 
 Route::get('/auctions/{auction}', [WelcomeController::class, 'auction'])->name('auctions.show');
 
+// Bid Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/bids/place', [App\Http\Controllers\BidController::class, 'place'])->name('bids.place');
+    Route::get('/bids/{product}/history', [App\Http\Controllers\BidController::class, 'history'])->name('bids.history');
+});
+
 // Category Routes
 Route::get('/categories', [WelcomeController::class, 'categories'])->name('frontend.categories.index');
 
