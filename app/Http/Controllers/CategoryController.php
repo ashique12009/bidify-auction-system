@@ -39,8 +39,9 @@ class CategoryController extends Controller
 
         if ($request->hasFile('category_image')) {
             $image = $request->file('category_image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/categories'), $imageName);
+            $imageName = 'categories/' . time() . '.' . $image->getClientOriginalExtension();
+            
+            Storage::disk('public')->put($imageName, $image->get());
             $data['category_image'] = $imageName;
         }
 
@@ -80,13 +81,13 @@ class CategoryController extends Controller
 
         if ($request->hasFile('category_image')) {
             // Delete old image if exists
-            if ($category->category_image && file_exists(public_path('uploads/categories/' . $category->category_image))) {
-                unlink(public_path('uploads/categories/' . $category->category_image));
+            if ($category->category_image && Storage::disk('public')->exists($category->category_image)) {
+                Storage::disk('public')->delete($category->category_image);
             }
 
             $image = $request->file('category_image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/categories'), $imageName);
+            $imageName = 'categories/' . time() . '.' . $image->getClientOriginalExtension();
+            Storage::disk('public')->put($imageName, $image->get());
             $data['category_image'] = $imageName;
         }
 
@@ -102,8 +103,8 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         // Delete image if exists
-        if ($category->category_image && file_exists(public_path('uploads/categories/' . $category->category_image))) {
-            unlink(public_path('uploads/categories/' . $category->category_image));
+        if ($category->category_image && Storage::disk('public')->exists($category->category_image)) {
+            Storage::disk('public')->delete($category->category_image);
         }
 
         $category->delete();

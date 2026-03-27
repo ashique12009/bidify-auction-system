@@ -34,7 +34,7 @@
                             @if($category->category_image)
                                 <div class="mt-2">
                                     <small class="text-muted">Current Image:</small><br>
-                                    <img src="{{ asset('uploads/categories/' . $category->category_image) }}" 
+                                    <img src="{{ asset('storage/' . $category->category_image) }}" 
                                          alt="{{ $category->category_name }}" style="width: 100px; height: 100px; object-fit: cover;">
                                 </div>
                             @endif

@@ -76,7 +76,7 @@
                             @if($product->product_image)
                                 <div class="mt-2">
                                     <small class="text-muted">Current Image:</small><br>
-                                    <img src="{{ asset('uploads/products/' . $product->product_image) }}" 
+                                    <img src="{{ asset('storage/' . $product->product_image) }}" 
                                          alt="{{ $product->product_name }}" style="width: 100px; height: 100px; object-fit: cover;">
                                 </div>
                             @endif

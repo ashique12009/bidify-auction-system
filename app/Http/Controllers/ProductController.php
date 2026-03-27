@@ -50,7 +50,7 @@ class ProductController extends Controller
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/products'), $imageName);
+            $image->move(public_path('storage/products/'), $imageName);
             $data['product_image'] = $imageName;
         }
 
@@ -99,13 +99,13 @@ class ProductController extends Controller
 
         if ($request->hasFile('product_image')) {
             // Delete old image if exists
-            if ($product->product_image && file_exists(public_path('uploads/products/' . $product->product_image))) {
-                unlink(public_path('uploads/products/' . $product->product_image));
+            if ($product->product_image && file_exists(public_path('storage/products/' . $product->product_image))) {
+                unlink(public_path('storage/products/' . $product->product_image));
             }
 
             $image = $request->file('product_image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/products'), $imageName);
+            $image->move(public_path('storage/products/'), $imageName);
             $data['product_image'] = $imageName;
         }
 
@@ -121,8 +121,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         // Delete image if exists
-        if ($product->product_image && file_exists(public_path('uploads/products/' . $product->product_image))) {
-            unlink(public_path('uploads/products/' . $product->product_image));
+        if ($product->product_image && file_exists(public_path('storage/products/' . $product->product_image))) {
+            unlink(public_path('storage/products/' . $product->product_image));
         }
 
         $product->delete();
