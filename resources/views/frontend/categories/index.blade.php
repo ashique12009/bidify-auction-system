@@ -32,7 +32,7 @@
                                     {{ $category->products_count ?? 0 }} active auctions
                                 </p>
                                 <div class="d-grid">
-                                    <a href="{{ route('categories.show', $category) }}" class="btn btn-outline-primary">
+                                    <a href="{{ route('frontend.categories.show', $category) }}" class="btn btn-outline-primary">
                                         Browse Auctions
                                     </a>
                                 </div>
@@ -77,7 +77,7 @@
                                             <p class="card-text text-muted">
                                                 {{ $category->products_count ?? 0 }} auctions available
                                             </p>
-                                            <a href="{{ route('categories.show', $category) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ route('frontend.categories.show', $category) }}" class="btn btn-sm btn-primary">
                                                 View Auctions
                                             </a>
                                         </div>

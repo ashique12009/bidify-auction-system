@@ -51,8 +51,8 @@ class WelcomeController extends Controller
      */
     public function categories()
     {
-        $categories = \App\Models\Category::withCount('products')->get();
-        $featuredCategories = \App\Models\Category::withCount('products')
+        $categories = Category::withCount('products')->get();
+        $featuredCategories = Category::withCount('products')
             ->where('products_count', '>', 0)
             ->take(6)
             ->get();
@@ -64,9 +64,9 @@ class WelcomeController extends Controller
      */
     public function category($category)
     {
-        $category = \App\Models\Category::withCount('products')->findOrFail($category);
+        $category = Category::withCount('products')->findOrFail($category);
         
-        $query = \App\Models\Product::with(['category', 'publisher'])
+        $query = Product::with(['category', 'publisher'])
             ->where('category_id', $category->id);
         
         // Apply filters

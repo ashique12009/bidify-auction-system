@@ -52,7 +52,7 @@ Route::get('/auctions/{auction}', [WelcomeController::class, 'auction'])->name('
 // Category Routes
 Route::get('/categories', [WelcomeController::class, 'categories'])->name('frontend.categories.index');
 
-Route::get('/categories/{category}', [WelcomeController::class, 'category'])->name('categories.show');
+Route::get('/categories/{category}', [WelcomeController::class, 'category'])->name('frontend.categories.show');
 
 // Search Route
 Route::get('/search', [WelcomeController::class, 'search'])->name('search.results');

@@ -32,11 +32,11 @@ class ProductController extends Controller
     /**
      * Admin index - Show all products for admin
      */
-    public function adminIndex()
-    {
-        $products = Product::with(['category', 'publisher'])->latest()->paginate(10);
-        return view('backend.products.admin-index', compact('products'));
-    }
+    // public function adminIndex()
+    // {
+    //     $products = Product::with(['category', 'publisher'])->latest()->paginate(10);
+    //     return view('backend.products.admin-index', compact('products'));
+    // }
 
     /**
      * Show the form for creating a new resource.

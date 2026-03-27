@@ -24,7 +24,6 @@
             <a href="{{ route('welcome') }}" class="logo"><img src="{{ asset('assets/images/mlogo.jpg') }}" alt="Bidify Logo"></a>
             <nav class="nav">
               <a href="{{ route('welcome') }}" class="{{ request()->routeIs('welcome') ? 'active' : '' }}">Home</a>
-              <a href="{{ route('auctions.index') }}" class="{{ request()->routeIs('auctions.*') ? 'active' : '' }}">Auctions</a>
               <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">Categories</a>
               <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">Products</a>
             </nav>
