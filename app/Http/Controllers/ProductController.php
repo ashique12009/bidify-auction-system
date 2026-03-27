@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -49,8 +50,8 @@ class ProductController extends Controller
 
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('storage/products/'), $imageName);
+            $imageName = 'products/' . time() . '.' . $image->getClientOriginalExtension();
+            Storage::disk('public')->put($imageName, $image->get());
             $data['product_image'] = $imageName;
         }
 
@@ -99,13 +100,13 @@ class ProductController extends Controller
 
         if ($request->hasFile('product_image')) {
             // Delete old image if exists
-            if ($product->product_image && file_exists(public_path('storage/products/' . $product->product_image))) {
-                unlink(public_path('storage/products/' . $product->product_image));
+            if ($product->product_image && Storage::disk('public')->exists($product->product_image)) {
+                Storage::disk('public')->delete($product->product_image);
             }
 
             $image = $request->file('product_image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('storage/products/'), $imageName);
+            $imageName = 'products/' . time() . '.' . $image->getClientOriginalExtension();
+            Storage::disk('public')->put($imageName, file_get_contents($image));
             $data['product_image'] = $imageName;
         }
 
@@ -121,8 +122,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         // Delete image if exists
-        if ($product->product_image && file_exists(public_path('storage/products/' . $product->product_image))) {
-            unlink(public_path('storage/products/' . $product->product_image));
+        if ($product->product_image && Storage::disk('public')->exists($product->product_image)) {
+            Storage::disk('public')->delete($product->product_image);
         }
 
         $product->delete();
