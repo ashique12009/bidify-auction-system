@@ -26,6 +26,27 @@ class WelcomeController extends Controller
     }
 
     /**
+     * Display the auctions page.
+     */
+    public function auctions()
+    {
+        $products = Product::with(['category', 'publisher'])
+            ->latest()
+            ->paginate(12);
+        return view('frontend.auctions.index', compact('products'));
+    }
+
+    /**
+     * Display the auction detail page.
+     */
+    public function auction($auction)
+    {
+        $auction = Product::with(['category', 'publisher', 'bids.user'])
+            ->findOrFail($auction);
+        return view('frontend.auctions.show', compact('auction'));
+    }
+
+    /**
      * Display the categories page.
      */
     public function categories()
@@ -86,5 +107,73 @@ class WelcomeController extends Controller
     public function howItWorks()
     {
         return view('frontend.pages.how-it-works');
+    }
+    
+    public function search()
+    {
+        $query = Product::with(['category', 'publisher']);
+    
+        // Search by keyword
+        if (request('q')) {
+            $query->where(function($q) {
+                $q->where('product_name', 'like', '%' . request('q') . '%')
+                ->orWhere('description', 'like', '%' . request('q') . '%');
+            });
+        }
+        
+        // Apply filters
+        if (request('category_id')) {
+            $query->where('category_id', request('category_id'));
+        }
+        
+        if (request('status')) {
+            $query->where('status', request('status'));
+        }
+        
+        if (request('min_price')) {
+            $query->where('current_price', '>=', request('min_price'));
+        }
+        
+        if (request('max_price')) {
+            $query->where('current_price', '<=', request('max_price'));
+        }
+        
+        // Apply sorting
+        switch (request('sort')) {
+            case 'price_low':
+                $query->orderBy('current_price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('current_price', 'desc');
+                break;
+            case 'ending_soon':
+                $query->orderBy('end_time', 'asc');
+                break;
+            case 'relevance':
+            default:
+                if (request('q')) {
+                    // Relevance: prioritize exact matches in title
+                    $query->orderByRaw("CASE 
+                        WHEN product_name LIKE ? THEN 1 
+                        WHEN product_name LIKE ? THEN 2 
+                        WHEN description LIKE ? THEN 3 
+                        ELSE 4 END", 
+                        [request('q'), '%' . request('q') . '%', '%' . request('q') . '%']);
+                }
+                $query->latest();
+        }
+        
+        $products = $query->paginate(12);
+        
+        // Get categories for filter dropdown
+        $categories = Category::all();
+        
+        // Generate search suggestions (optional)
+        $suggestions = [];
+        if (request('q') && $products->isEmpty()) {
+            $suggestions = ['Electronics', 'Fashion', 'Art', 'Jewelry', 'Watches'];
+        }
+        
+        return view('frontend.search.results', compact('products', 'categories', 'suggestions'));
     }
 }
