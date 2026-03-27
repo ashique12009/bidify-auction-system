@@ -140,24 +140,24 @@ class ProductSeeder extends Seeder
                 foreach ($productsByCategory[$categoryName] as $productData) {
 
                     $response = Http::timeout(10)->get($productData['product_image']);
-                    $fileName = null;
+                    
                     if ($response->successful() && str_contains($response->header('Content-Type'), 'image')) {
                         $fileName = 'products/' . Str::random(10) . '.jpg';
                         Storage::disk('public')->put($fileName, $response->body());
+
+                        Product::create([
+                            'category_id' => $category->id,
+                            'publisher_id' => $publisher->id,
+                            'product_name' => $productData['product_name'],
+                            'description' => $productData['description'],
+                            'product_image' => $fileName,
+                            'status' => $productData['status'],
+                            'start_price' => $productData['start_price'],
+                            'current_price' => $productData['current_price'],
+                            'start_time' => $productData['status'] === 'running' ? Carbon::now()->subDays(rand(1, 3)) : null,
+                            'end_time' => $productData['status'] === 'running' ? Carbon::now()->addDays(rand(2, 7)) : null,
+                        ]);
                     }
-                    
-                    Product::create([
-                        'category_id' => $category->id,
-                        'publisher_id' => $publisher->id,
-                        'product_name' => $productData['product_name'],
-                        'description' => $productData['description'],
-                        'product_image' => $fileName ?? $productData['product_image'],
-                        'status' => $productData['status'],
-                        'start_price' => $productData['start_price'],
-                        'current_price' => $productData['current_price'],
-                        'start_time' => $productData['status'] === 'running' ? Carbon::now()->subDays(rand(1, 3)) : null,
-                        'end_time' => $productData['status'] === 'running' ? Carbon::now()->addDays(rand(2, 7)) : null,
-                    ]);
                 }
             }
         }

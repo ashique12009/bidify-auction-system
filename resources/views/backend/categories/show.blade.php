@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             @if($category->category_image)
-                                <img src="{{ asset('uploads/categories/' . $category->category_image) }}" 
+                                <img src="{{ asset('storage/' . $category->category_image) }}" 
                                      alt="{{ $category->category_name }}" class="img-fluid rounded">
                             @else
                                 <div class="text-center text-muted bg-light p-5 rounded">

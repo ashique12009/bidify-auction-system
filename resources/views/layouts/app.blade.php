@@ -26,13 +26,9 @@
               <a href="{{ route('welcome') }}" class="{{ request()->routeIs('welcome') ? 'active' : '' }}">Home</a>
               <a href="{{ route('auctions.index') }}" class="{{ request()->routeIs('auctions.*') ? 'active' : '' }}">Auctions</a>
               <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">Categories</a>
-              <a href="{{ route('how-it-works') }}" class="{{ request()->routeIs('how-it-works') ? 'active' : '' }}">How It Works</a>
+              <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">Products</a>
             </nav>
             <div class="header-actions">
-              <form action="{{ route('search.results') }}" method="GET" class="search-form me-3">
-                <input type="text" name="q" placeholder="Search..." class="form-control" value="{{ request('q') }}">
-                <button type="submit" class="btn btn-outline-primary">Search</button>
-              </form>
               @auth
                 <div class="dropdown me-3">
                   <button class="btn btn-outline dropdown-toggle" type="button" data-bs-toggle="dropdown">

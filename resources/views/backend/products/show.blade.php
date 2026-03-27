@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             @if($product->product_image)
-                                <img src="{{ asset('uploads/products/' . $product->product_image) }}" 
+                                <img src="{{ asset('storage/' . $product->product_image) }}" 
                                      alt="{{ $product->product_name }}" class="img-fluid rounded">
                             @else
                                 <div class="text-center text-muted bg-light p-5 rounded">
