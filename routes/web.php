@@ -45,30 +45,138 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
 
 // Auction Routes
 Route::get('/auctions', function () {
-    return view('auctions.index');
+    $auctions = \App\Models\Product::with(['category', 'publisher'])
+        ->where('status', 'running')
+        ->latest()
+        ->paginate(12);
+    return view('frontend.auctions.index', compact('auctions'));
 })->name('auctions.index');
 
 Route::get('/auctions/{auction}', function ($auction) {
-    return view('auctions.show', compact('auction'));
+    $auction = \App\Models\Product::with(['category', 'publisher', 'bids.user'])
+        ->findOrFail($auction);
+    return view('frontend.auctions.show', compact('auction'));
 })->name('auctions.show');
 
 // Category Routes
 Route::get('/categories', function () {
-    return view('categories.index');
+    $categories = \App\Models\Category::withCount('products')->get();
+    $featuredCategories = \App\Models\Category::withCount('products')
+        ->where('products_count', '>', 0)
+        ->take(6)
+        ->get();
+    return view('frontend.categories.index', compact('categories', 'featuredCategories'));
 })->name('categories.index');
 
 Route::get('/categories/{category}', function ($category) {
-    return view('categories.show', compact('category'));
+    $category = \App\Models\Category::withCount('products')->findOrFail($category);
+    
+    $query = \App\Models\Product::with(['category', 'publisher'])
+        ->where('category_id', $category->id);
+    
+    // Apply filters
+    if (request('status')) {
+        $query->where('status', request('status'));
+    }
+    
+    if (request('min_price')) {
+        $query->where('current_price', '>=', request('min_price'));
+    }
+    
+    if (request('max_price')) {
+        $query->where('current_price', '<=', request('max_price'));
+    }
+    
+    // Apply sorting
+    switch (request('sort')) {
+        case 'price_low':
+            $query->orderBy('current_price', 'asc');
+            break;
+        case 'price_high':
+            $query->orderBy('current_price', 'desc');
+            break;
+        case 'ending_soon':
+            $query->orderBy('end_time', 'asc');
+            break;
+        default:
+            $query->latest();
+    }
+    
+    $products = $query->paginate(12);
+    return view('frontend.categories.show', compact('category', 'products'));
 })->name('categories.show');
 
 // Search Route
 Route::get('/search', function () {
-    return view('search.results');
+    $query = \App\Models\Product::with(['category', 'publisher']);
+    
+    // Search by keyword
+    if (request('q')) {
+        $query->where(function($q) {
+            $q->where('product_name', 'like', '%' . request('q') . '%')
+              ->orWhere('description', 'like', '%' . request('q') . '%');
+        });
+    }
+    
+    // Apply filters
+    if (request('category_id')) {
+        $query->where('category_id', request('category_id'));
+    }
+    
+    if (request('status')) {
+        $query->where('status', request('status'));
+    }
+    
+    if (request('min_price')) {
+        $query->where('current_price', '>=', request('min_price'));
+    }
+    
+    if (request('max_price')) {
+        $query->where('current_price', '<=', request('max_price'));
+    }
+    
+    // Apply sorting
+    switch (request('sort')) {
+        case 'price_low':
+            $query->orderBy('current_price', 'asc');
+            break;
+        case 'price_high':
+            $query->orderBy('current_price', 'desc');
+            break;
+        case 'ending_soon':
+            $query->orderBy('end_time', 'asc');
+            break;
+        case 'relevance':
+        default:
+            if (request('q')) {
+                // Relevance: prioritize exact matches in title
+                $query->orderByRaw("CASE 
+                    WHEN product_name LIKE ? THEN 1 
+                    WHEN product_name LIKE ? THEN 2 
+                    WHEN description LIKE ? THEN 3 
+                    ELSE 4 END", 
+                    [request('q'), '%' . request('q') . '%', '%' . request('q') . '%']);
+            }
+            $query->latest();
+    }
+    
+    $products = $query->paginate(12);
+    
+    // Get categories for filter dropdown
+    $categories = \App\Models\Category::all();
+    
+    // Generate search suggestions (optional)
+    $suggestions = [];
+    if (request('q') && $products->isEmpty()) {
+        $suggestions = ['Electronics', 'Fashion', 'Art', 'Jewelry', 'Watches'];
+    }
+    
+    return view('frontend.search.results', compact('products', 'categories', 'suggestions'));
 })->name('search.results');
 
 // How It Works Route
 Route::get('/how-it-works', function () {
-    return view('pages.how-it-works');
+    return view('frontend.pages.how-it-works');
 })->name('how-it-works');
 
 require __DIR__.'/auth.php';

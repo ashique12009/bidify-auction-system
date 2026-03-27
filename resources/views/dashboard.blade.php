@@ -25,7 +25,7 @@
                             <a href="{{ route('categories.index') }}" class="btn btn-outline-primary w-100 mb-2">Manage Categories</a>
                         </div>
                         <div class="col-md-3">
-                            <a href="{{ route('admin.products.index') }}" class="btn btn-outline-success w-100 mb-2">Manage All Products</a>
+                            <a href="{{ route('products.index') }}" class="btn btn-outline-success w-100 mb-2">Manage All Products</a>
                         </div>
                     @endif
                     

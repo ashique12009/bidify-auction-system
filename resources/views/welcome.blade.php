@@ -20,9 +20,9 @@
         <a href="{{ route('welcome') }}" class="logo"><img src="{{ asset('assets/images/mlogo.jpg') }}" alt="Bidify Logo"></a>
         <nav class="nav">
           <a href="{{ route('welcome') }}">Home</a>
-          <a href="{{ route('welcome') }}">Auctions</a>
-          <a href="{{ route('welcome') }}">Categories</a>
-          <a href="{{ route('welcome') }}">How It Works</a>
+          <a href="{{ route('auctions.index') }}">Auctions</a>
+          <a href="{{ route('categories.index') }}">Categories</a>
+          <a href="{{ route('how-it-works') }}">How It Works</a>
         </nav>
         <div class="header-actions">
           <a href="{{ route('login') }}" class="btn btn-outline">Sign In</a>
