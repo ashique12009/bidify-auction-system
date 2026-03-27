@@ -11,6 +11,7 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <link rel="icon" href="favicon1.ico" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('css/frontend-style.css') }}">
+    @vite(['resources/js/app.js'])
   </head>
   <body>
     <!-- Header -->
