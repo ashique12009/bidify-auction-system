@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bid;
 use App\Models\Product;
+use App\Events\BidPlaced;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,34 +13,36 @@ class BidController extends Controller
     /**
      * Place a bid on a product
      */
-    public function place(Request $request)
+    public function place(Request $request, Product $product = null)
     {
+        // Handle both route parameter and form input
+        $productId = $product ? $product->id : $request->input('product_id');
+        $product = Product::findOrFail($productId);
+
         $request->validate([
             'bid_amount' => 'required|numeric|min:0.01',
         ]);
 
-        $product = Product::findOrFail($request->input('product_id'));
-
         // Check if auction is running
         if ($product->status !== 'running') {
-            return back()->with('error', 'This auction is not currently running.');
+            return response()->json(['success' => false, 'message' => 'This auction is not currently running.'], 400);
         }
 
         // Check if auction has ended
         if ($product->end_time && $product->end_time->isPast()) {
-            return back()->with('error', 'This auction has ended.');
+            return response()->json(['success' => false, 'message' => 'This auction has ended.'], 400);
         }
 
         $bidAmount = $request->input('bid_amount');
 
         // Check if bid amount is higher than current price
         if ($bidAmount <= $product->current_price) {
-            return back()->with('error', 'Bid amount must be higher than the current bid of $' . number_format($product->current_price, 2));
+            return response()->json(['success' => false, 'message' => 'Bid amount must be higher than the current bid of $' . number_format($product->current_price, 2)], 400);
         }
 
         // Check if user is trying to bid on their own product
         if ($product->publisher_id === Auth::id()) {
-            return back()->with('error', 'You cannot bid on your own product.');
+            return response()->json(['success' => false, 'message' => 'You cannot bid on your own product.'], 400);
         }
 
         // Create the bid
@@ -54,7 +57,15 @@ class BidController extends Controller
             'current_price' => $bidAmount,
         ]);
 
-        return back()->with('success', 'Your bid of $' . number_format($bidAmount, 2) . ' has been placed successfully!');
+        // Broadcast the bid place
+        broadcast(new BidPlaced($bid, $product));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your bid of $' . number_format($bidAmount, 2) . ' has been placed successfully!',
+        ]);
+
+        // return back()->with('success', 'Your bid of $' . number_format($bidAmount, 2) . ' has been placed successfully!');
     }
 
     /**

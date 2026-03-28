@@ -52,6 +52,7 @@ Route::get('/auctions/{auction}', [WelcomeController::class, 'auction'])->name('
 // Bid Routes
 Route::middleware('auth')->group(function () {
     Route::post('/bids/place', [App\Http\Controllers\BidController::class, 'place'])->name('bids.place');
+    //Route::post('/bid/{product}', [App\Http\Controllers\BidController::class, 'place'])->name('bid.place');
     Route::get('/bids/{product}/history', [App\Http\Controllers\BidController::class, 'history'])->name('bids.history');
 });
 

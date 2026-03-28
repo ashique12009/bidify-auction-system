@@ -64,5 +64,11 @@
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Axios for AJAX -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        
+        <!-- Laravel Echo for Real-time -->
+        @vite(['resources/js/app.js'])
     </body>
 </html>
