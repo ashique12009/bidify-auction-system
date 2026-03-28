@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="row">
+    <div class="row g-4">
         <div class="col-md-8">
             <!-- Auction Details -->
             <div class="card">
@@ -18,12 +18,12 @@
                     <p class="card-text">{{ $auction->description }}</p>
                     
                     <div class="row mt-4">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="bid-info">
                                 <h6>Auction Details</h6>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Current Bid:</span>
-                                    <span class="fw-bold text-primary fs-4">${{ number_format($auction->current_price, 2) }}</span>
+                                    <span class="fw-bold text-primary">${{ number_format($auction->current_price, 2) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Starting Bid:</span>
@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="time-info">
                                 <h6>Auction Timeline</h6>
                                 <div class="d-flex justify-content-between mb-2">
@@ -59,7 +59,7 @@
                     </div>
                     
                     @auth
-                        @if($auction->status === 'running')
+                        @if($auction->status === 'running' && (!$auction->end_time || !$auction->end_time->isPast()))
                             <div class="mt-4">
                                 <h6>Place Your Bid</h6>
                                 @if(session('success'))
@@ -91,8 +91,10 @@
                                     <strong>Auction {{ $auction->status }}</strong>
                                     @if($auction->status === 'ended')
                                         <br>This auction has ended.
-                                    @else
+                                    @elseif($auction->status === 'pending')
                                         <br>This auction has not started yet.
+                                    @else
+                                        <br>This auction is no longer active.
                                     @endif
                                 </div>
                             </div>
@@ -171,6 +173,16 @@ function updateCountdown() {
     
     if (distance < 0) {
         document.getElementById('time-left').innerHTML = "Auction Ended";
+        // Disable bid form when auction ends
+        const bidForm = document.querySelector('.bid-form');
+        if (bidForm) {
+            const submitBtn = bidForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Auction Ended';
+                submitBtn.classList.add('disabled');
+            }
+        }
         return;
     }
     
