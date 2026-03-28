@@ -298,67 +298,72 @@ function showBidAlert(type, message) {
 
 // Laravel Echo Real-time Listening
 @if(auth()->check())
-// Check if Echo is available
-if (typeof window.Echo !== 'undefined') {
-    window.Echo.channel('auction.{{ $auction->id }}')
-        .listen('BidPlaced', (e) => {
-            console.log('New bid received:', e);
-            
-            // Update current bid
-            const currentBidElement = document.getElementById('current_bid');
-            if (currentBidElement) {
-                currentBidElement.textContent = '$' + parseFloat(e.bid.bid_amount).toFixed(2);
-            }
-            
-            // Update total bids
-            const totalBidsElement = document.getElementById('total_bids');
-            if (totalBidsElement) {
-                const currentBids = parseInt(totalBidsElement.textContent);
-                totalBidsElement.textContent = currentBids + 1;
-            }
-            
-            // Update minimum bid
-            const minBid = parseFloat(e.bid.bid_amount) + 1;
-            const bidInput = document.querySelector('input[name="bid_amount"]');
-            if (bidInput) {
-                bidInput.min = minBid;
-                bidInput.value = minBid;
-            }
-            
-            // Update minimum bid text
-            const minBidText = document.querySelector('small.text-muted');
-            if (minBidText) {
-                minBidText.textContent = 'Minimum bid: $' + minBid.toFixed(2);
-            }
-            
-            // Add new bid to history (at the top)
-            const bidHistory = document.getElementById('bid-history');
-            if (bidHistory) {
-                const newBidHtml = `
-                    <div class="d-flex justify-content-between mb-2 pb-2 border-bottom" style="background-color: #e8f5e8; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <div>
-                            <strong>${e.bid.user.name}</strong>
-                            <br><small class="text-muted">Just now</small>
-                        </div>
-                        <span class="fw-bold text-success">$${parseFloat(e.bid.bid_amount).toFixed(2)}</span>
-                    </div>
-                `;
-                
-                // Insert after the first "No bids yet" message if it exists
-                const noBidsMessage = bidHistory.querySelector('.text-muted.text-center');
-                if (noBidsMessage) {
-                    noBidsMessage.remove();
-                }
-                
-                bidHistory.insertAdjacentHTML('afterbegin', newBidHtml);
-                
-                // Show notification
-                showBidAlert('info', `New bid of $${parseFloat(e.bid.bid_amount).toFixed(2)} placed by ${e.bid.user.name}`);
-            }
-        });
-} else {
-    console.warn('Laravel Echo is not available.');
-}
+    window.addEventListener('load', function() {
+
+        if (window.Echo) {
+            console.log('✅ Laravel Echo is available! Setting up real-time channel...');
+            window.Echo.channel('auction.{{ $auction->id }}')
+                .listen('BidPlaced', (e) => {
+                    console.log('🔔 New bid received:', e);
+                    
+                    // Update current bid
+                    const currentBidElement = document.getElementById('current_bid');
+                    if (currentBidElement) {
+                        currentBidElement.textContent = '$' + parseFloat(e.bid.bid_amount).toFixed(2);
+                    }
+                    
+                    // Update total bids
+                    const totalBidsElement = document.getElementById('total_bids');
+                    if (totalBidsElement) {
+                        const currentBids = parseInt(totalBidsElement.textContent);
+                        totalBidsElement.textContent = currentBids + 1;
+                    }
+                    
+                    // Update minimum bid
+                    const minBid = parseFloat(e.bid.bid_amount) + 1;
+                    const bidInput = document.querySelector('input[name="bid_amount"]');
+                    if (bidInput) {
+                        bidInput.min = minBid;
+                        bidInput.value = minBid;
+                    }
+                    
+                    // Update minimum bid text
+                    const minBidText = document.querySelector('small.text-muted');
+                    if (minBidText) {
+                        minBidText.textContent = 'Minimum bid: $' + minBid.toFixed(2);
+                    }
+                    
+                    // Add new bid to history (at the top)
+                    const bidHistory = document.getElementById('bid-history');
+                    if (bidHistory) {
+                        const newBidHtml = `
+                            <div class="d-flex justify-content-between mb-2 pb-2 border-bottom" style="background-color: #e8f5e8; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+                                <div>
+                                    <strong>${e.bid.user.name}</strong>
+                                    <br><small class="text-muted">Just now</small>
+                                </div>
+                                <span class="fw-bold text-success">$${parseFloat(e.bid.bid_amount).toFixed(2)}</span>
+                            </div>
+                        `;
+                        
+                        // Remove "No bids yet" message if it exists
+                        const noBidsMessage = bidHistory.querySelector('.text-muted.text-center');
+                        if (noBidsMessage) {
+                            noBidsMessage.remove();
+                        }
+                        
+                        bidHistory.insertAdjacentHTML('afterbegin', newBidHtml);
+                        
+                        // Show notification
+                        showBidAlert('info', `💰 New bid of $${parseFloat(e.bid.bid_amount).toFixed(2)} placed by ${e.bid.user.name}`);
+                    }
+                });
+        }
+        else {
+            console.error('❌ Echo is not available!');
+        }
+        console.log('🎯 Real-time listening started for auction {{ $auction->id }}');
+    });
 @endif
 </script>
 @endsection
