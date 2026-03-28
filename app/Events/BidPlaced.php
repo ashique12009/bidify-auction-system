@@ -39,6 +39,8 @@ class BidPlaced implements ShouldBroadcast
         //     new PrivateChannel('channel-name'),
         // ];
 
-        return new Channel('auction.' . $this->product->id);
+        return [
+            new Channel('auction.' . $this->bid->product_id),
+        ];
     }
 }
