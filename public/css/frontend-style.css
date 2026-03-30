@@ -414,6 +414,11 @@ body {
   color: var(--gray-400);
 }
 
+/* Common Styles */
+.mh-60 {
+  min-height: 60px;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .auction-grid {

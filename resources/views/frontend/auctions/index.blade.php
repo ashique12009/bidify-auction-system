@@ -25,7 +25,7 @@
                                 </span>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ $auction->product_name }}</h5>
+                                <h5 class="card-title h-60">{{ $auction->product_name }}</h5>
                                 <p class="card-text text-muted small">{{ Str::limit($auction->description, 100) }}</p>
                                 
                                 <div class="bid-info mb-3">

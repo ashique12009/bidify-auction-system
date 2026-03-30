@@ -102,7 +102,7 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ $product->product_name }}</h5>
-                                <p class="card-text text-muted small">{{ Str::limit($product->description, 100) }}</p>
+                                <p class="card-text text-muted small mh-60">{{ Str::limit($product->description, 100) }}</p>
                                 
                                 <div class="bid-info mb-3">
                                     <div class="d-flex justify-content-between">
