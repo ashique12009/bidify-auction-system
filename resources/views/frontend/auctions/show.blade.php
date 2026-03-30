@@ -169,6 +169,7 @@ function updateCountdown() {
         document.getElementById('time-left').innerHTML = "Auction Ended";
         // Disable bid form when auction ends
         const bidForm = document.querySelector('#bid-form');
+        console.log('Auction ended, disabling bid form:', bidForm);
         if (bidForm) {
             const submitBtn = bidForm.querySelector('button[type="submit"]');
             if (submitBtn) {
