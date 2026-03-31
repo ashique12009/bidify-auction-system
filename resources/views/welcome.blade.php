@@ -174,30 +174,20 @@
       <div class="container">
         <h2>Browse Categories</h2>
         <div class="category-grid">
-          <a href="#" class="category-card">
-            <span class="category-icon">⌚</span>
-            <span>Watches</span>
-          </a>
-          <a href="#" class="category-card">
-            <span class="category-icon">🎨</span>
-            <span>Art</span>
-          </a>
-          <a href="#" class="category-card">
-            <span class="category-icon">💎</span>
-            <span>Jewelry</span>
-          </a>
-          <a href="#" class="category-card">
-            <span class="category-icon">📱</span>
-            <span>Electronics</span>
-          </a>
-          <a href="#" class="category-card">
-            <span class="category-icon">🏠</span>
-            <span>Home</span>
-          </a>
-          <a href="#" class="category-card">
-            <span class="category-icon">👟</span>
-            <span>Fashion</span>
-          </a>
+          @forelse($categories as $category)
+            <a href="{{ route('frontend.categories.show', $category->id) }}" class="category-card">
+              @if(!empty($category->category_image))
+                <span class="category-icon">
+                  <img src="{{ asset('storage/' . $category->category_image) }}" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ $category->category_name }}">
+                </span>
+              @else
+                <span class="category-icon">{{ substr($category->category_name, 0, 1) }}</span>
+              @endif
+              <span>{{ $category->category_name }}</span>
+            </a>
+          @empty
+            <p>No categories found.</p>
+          @endforelse
         </div>
       </div>
     </section>
