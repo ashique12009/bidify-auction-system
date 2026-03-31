@@ -27,10 +27,12 @@ class WelcomeController extends Controller {
    * Display the auctions page.
    */
   public function auctions() {
-    $products = Product::with(['category', 'publisher'])
+    $auctions = Product::with(['category', 'publisher', 'bids'])
+        ->where('status', 'running')
         ->latest()
         ->paginate(12);
-    return view('frontend.auctions.index', compact('products'));
+
+    return view('frontend.auctions.index', compact('auctions'));
   }
 
   /**
