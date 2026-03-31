@@ -36,10 +36,15 @@
       <div class="container">
         <h1>Find & Bid on Unique Items</h1>
         <p>Discover rare collectibles, antiques, and exclusive products at unbeatable prices.</p>
-        <div class="search-box">
-          <input type="text" placeholder="Search for items...">
-          <button class="btn btn-primary">Search</button>
-        </div>
+        <form class="search-box" action="{{ route('search.results') }}" method="GET">
+          <input
+            type="text"
+            name="q"
+            value="{{ request('q') }}"
+            placeholder="Search for items..."
+          >
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
       </div>
     </section>
 
