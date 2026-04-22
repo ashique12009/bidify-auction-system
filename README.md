@@ -210,7 +210,11 @@ npm run test            # Run frontend tests
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Few screenshots:
+Welcome page:
 <img width="3024" height="3818" alt="Image" src="https://github.com/user-attachments/assets/bca534da-c3a5-4142-965c-92534ada3601" />
+Categories page:
 <img width="3024" height="4835" alt="Image" src="https://github.com/user-attachments/assets/2e32d5a3-b01e-4aa4-8cb5-6a07307fef4a" />
+Category detail page:
 <img width="3024" height="2832" alt="Image" src="https://github.com/user-attachments/assets/c7198ab9-0477-493f-adba-d1b5061cd6c0" />
+How it works page:
 <img width="3024" height="6051" alt="Image" src="https://github.com/user-attachments/assets/474aec14-7bca-484d-a7f6-80419d60364b" />
