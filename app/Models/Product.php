@@ -5,42 +5,52 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
-{
-    use HasFactory;
+class Product extends Model {
+  use HasFactory;
 
-    protected $fillable = [
-        'category_id',
-        'publisher_id',
-        'product_name',
-        'description',
-        'product_image',
-        'status',
-        'start_price',
-        'current_price',
-        'start_time',
-        'end_time',
-    ];
+  protected $fillable = [
+    'category_id',
+    'publisher_id',
+    'product_name',
+    'description',
+    'product_image',
+    'status',
+    'start_price',
+    'current_price',
+    'start_time',
+    'end_time',
+  ];
 
-    protected $casts = [
-        'start_price' => 'decimal:2',
-        'current_price' => 'decimal:2',
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
-    ];
+  protected $casts = [
+    'start_price'   => 'decimal:2',
+    'current_price' => 'decimal:2',
+    'start_time'    => 'datetime',
+    'end_time'      => 'datetime',
+  ];
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
+  public function category() {
+    return $this->belongsTo(Category::class);
+  }
+
+  public function publisher() {
+    return $this->belongsTo(User::class, 'publisher_id');
+  }
+
+  public function bids() {
+    return $this->hasMany(Bid::class)->orderBy('created_at', 'desc');
+  }
+
+  public function getComputedStatusAttribute() {
+    $now = now();
+
+    if ($this->start_time && $now->lt($this->start_time)) {
+      return 'upcoming';
     }
 
-    public function publisher()
-    {
-        return $this->belongsTo(User::class, 'publisher_id');
+    if ($this->end_time && $now->gt($this->end_time)) {
+      return 'ended';
     }
 
-    public function bids()
-    {
-        return $this->hasMany(Bid::class)->orderBy('created_at', 'desc');
-    }
+    return 'running';
+  }
 }
