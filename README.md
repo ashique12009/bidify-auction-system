@@ -197,14 +197,6 @@ php artisan test          # Run PHPUnit tests
 npm run test            # Run frontend tests
 ```
 
-## 📝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
 ## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
