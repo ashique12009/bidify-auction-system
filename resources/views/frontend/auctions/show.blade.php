@@ -30,6 +30,8 @@
                     <span class="text-muted">Starting Bid:</span>
                     <span>${{ number_format($auction->start_price, 2) }}</span>
                   </div>
+                </div>
+                <div class="bid-info">
                   <div class="d-flex justify-content-between mb-2">
                     <span class="text-muted">Total Bids:</span>
                     <span class="fw-bold" id="total_bids">{{ $auction->bids->count() }}</span>
