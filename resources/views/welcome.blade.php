@@ -52,15 +52,15 @@
     <section class="stats">
       <div class="container stats-grid">
         <div class="stat-item">
-          <span class="stat-number">12,500+</span>
+          <span class="stat-number">125+</span>
           <span class="stat-label">Active Auctions</span>
         </div>
         <div class="stat-item">
-          <span class="stat-number">45,000+</span>
+          <span class="stat-number">490+</span>
           <span class="stat-label">Registered Users</span>
         </div>
         <div class="stat-item">
-          <span class="stat-number">$2.5M+</span>
+          <span class="stat-number">$1k+</span>
           <span class="stat-label">Items Sold</span>
         </div>
         <div class="stat-item">
