@@ -24,9 +24,29 @@
           <a href="{{ route('frontend.categories.index') }}">Categories</a>
           <a href="{{ route('how-it-works') }}">How It Works</a>
         </nav>
+
         <div class="header-actions">
-          <a href="{{ route('login') }}" class="btn btn-outline">Sign In</a>
-          <a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+          @auth
+            <div class="dropdown me-3">
+              <button class="btn btn-outline dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                {{ auth()->user()->name }}
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="dropdown-item">Logout</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          @else
+            <a href="{{ route('login') }}" class="btn btn-outline me-2">Sign In</a>
+            <a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+          @endauth
         </div>
       </div>
     </header>
